@@ -1,0 +1,14 @@
+image = Import["your_image.jpg"];
+
+AutomaticImageEnhancer[img_, options___] := Module[
+  {enhancedImage = img},
+  enhancedImage = ImageAdjust[enhancedImage];
+  enhancedImage = Sharpen[enhancedImage, 2];
+  enhancedImage = ImageAdjust[enhancedImage, {0.2, 0.8}, options];
+  enhancedImage
+]
+
+enhancedImage = AutomaticImageEnhancer[image, Method -> "Customize", 
+  "Contrast" -> 1.5, "Brightness" -> 0.1, "Saturation" -> 1.2]
+
+{image, enhancedImage}
