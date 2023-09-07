@@ -1,0 +1,28 @@
+Needs["JLink`"];
+Needs["GUIKit`"];
+
+WorldClock[locations_List] := 
+  DynamicModule[{timezones, times, selectedLocations = locations}, 
+   timezones = TimeZone /@ locations;
+   times = 
+    Dynamic[DateString[#, {"Hour", ":", "Minute", ":", "Second"}] & /@ 
+      DateList[#, TimeZone -> #] & /@ selectedLocations];
+   Column[{
+     Row[{
+       Dynamic@
+        PopupMenu[Dynamic[selectedLocations], locations, 
+         FieldSize -> {{10, 30}, {1, Infinity}}], Spacer[10],
+       Button["Add City", 
+        AppendTo[selectedLocations, 
+         "Select a city" -> "America/New_York"], Method -> "Queued"]
+       }],
+     Grid[
+      Join[{{"City", "Time"}}, 
+       Transpose[{selectedLocations, times}]], 
+      Dividers -> {{True, False}, {True, True}}]
+     }]
+   ];
+
+cities = {"New York" -> "America/New_York", "London" -> "Europe/London", "Tokyo" -> "Asia/Tokyo"};
+
+CreateDialog[WorldClock[cities], WindowTitle -> "World Clock"]
